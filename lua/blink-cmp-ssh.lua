@@ -18,60 +18,129 @@ function M.enabled()
   return vim.bo.filetype == 'sshconfig'
 end
 
----@type table<string, string[]>
-local static_enums = {
-  AddKeysToAgent = { 'yes', 'no', 'ask', 'confirm' },
-  AddressFamily = { 'any', 'inet', 'inet6' },
-  BatchMode = { 'yes', 'no' },
-  CanonicalizeHostname = { 'yes', 'no', 'always' },
-  CanonicalizeFallbackLocal = { 'yes', 'no' },
-  CheckHostIP = { 'yes', 'no' },
-  ClearAllForwardings = { 'yes', 'no' },
-  Compression = { 'yes', 'no' },
-  ControlMaster = { 'yes', 'no', 'ask', 'auto', 'autoask' },
-  EnableEscapeCommandline = { 'yes', 'no' },
-  EnableSSHKeysign = { 'yes', 'no' },
-  ExitOnForwardFailure = { 'yes', 'no' },
-  FingerprintHash = { 'md5', 'sha256' },
-  ForkAfterAuthentication = { 'yes', 'no' },
-  ForwardAgent = { 'yes', 'no' },
-  ForwardX11 = { 'yes', 'no' },
-  ForwardX11Trusted = { 'yes', 'no' },
-  GatewayPorts = { 'yes', 'no' },
-  GSSAPIAuthentication = { 'yes', 'no' },
-  GSSAPIDelegateCredentials = { 'yes', 'no' },
-  HashKnownHosts = { 'yes', 'no' },
-  HostbasedAuthentication = { 'yes', 'no' },
-  IdentitiesOnly = { 'yes', 'no' },
-  KbdInteractiveAuthentication = { 'yes', 'no' },
-  LogLevel = {
-    'QUIET',
-    'FATAL',
-    'ERROR',
-    'INFO',
-    'VERBOSE',
-    'DEBUG',
-    'DEBUG1',
-    'DEBUG2',
-    'DEBUG3',
-  },
-  NoHostAuthenticationForLocalhost = { 'yes', 'no' },
-  PasswordAuthentication = { 'yes', 'no' },
-  PermitLocalCommand = { 'yes', 'no' },
-  PermitRemoteOpen = { 'any', 'none' },
-  ProxyUseFdpass = { 'yes', 'no' },
-  PubkeyAuthentication = { 'yes', 'no', 'unbound', 'host-bound' },
-  RequestTTY = { 'yes', 'no', 'force', 'auto' },
-  SessionType = { 'none', 'subsystem', 'default' },
-  StdinNull = { 'yes', 'no' },
-  StreamLocalBindUnlink = { 'yes', 'no' },
-  StrictHostKeyChecking = { 'yes', 'no', 'ask', 'accept-new', 'off' },
-  TCPKeepAlive = { 'yes', 'no' },
-  Tunnel = { 'yes', 'no', 'point-to-point', 'ethernet' },
-  UpdateHostKeys = { 'yes', 'no', 'ask' },
-  VerifyHostKeyDNS = { 'yes', 'no', 'ask' },
-  VisualHostKey = { 'yes', 'no' },
-}
+---@param fragment string
+---@return string[]?
+local function parse_value_list(fragment)
+  fragment = fragment:gsub('%b()', '')
+  fragment = fragment:gsub('"', '')
+  fragment = fragment:gsub(' or ', ', ')
+  fragment = fragment:gsub(' and ', ', ')
+  local vals = {}
+  local seen = {}
+  for piece in (fragment .. ','):gmatch('%s*(.-),%s*') do
+    piece = vim.trim(piece)
+    if piece ~= '' and not piece:find('%s') then
+      local val = piece:match('^([%a][%a%d-]+)$')
+      if val then
+        if not seen[val] then
+          seen[val] = true
+          vals[#vals + 1] = val
+        end
+      end
+    end
+  end
+  return #vals >= 2 and vals or nil
+end
+
+---@param man_stdout string
+---@return table<string, string[]>
+local function extract_enums_from_man(man_stdout)
+  local lines = {}
+  for line in (man_stdout .. '\n'):gmatch('(.-)\n') do
+    lines[#lines + 1] = line
+  end
+
+  local defs = {}
+  for i, line in ipairs(lines) do
+    local kw = line:match('^       (%u[%a%d]+)%s*$') or line:match('^       (%u[%a%d]+)  ')
+    if kw then
+      defs[#defs + 1] = { line = i, keyword = kw }
+    end
+  end
+
+  local enums = {}
+  for idx, def in ipairs(defs) do
+    local block_end = (defs[idx + 1] and defs[idx + 1].line or #lines) - 1
+    local parts = {}
+    for k = def.line + 1, block_end do
+      parts[#parts + 1] = lines[k]
+    end
+    local text = table.concat(parts, ' ')
+    text = text:gsub(string.char(0xe2, 0x80, 0x90) .. '%s+', '')
+    text = text:gsub('%s+', ' ')
+
+    local list = text:match('[Tt]he argument must be (.-)%.')
+      or text:match('[Tt]he argument to this keyword must be (.-)%.')
+      or text:match('[Tt]he argument may be one of:? (.-)%.')
+      or text:match('[Tt]he argument may be (.-)%.')
+      or text:match('[Tt]he possible values are:? (.-)%.')
+      or text:match('[Vv]alid arguments are (.-)%.')
+      or text:match('[Vv]alid options are:? (.-)%.')
+      or text:match('[Aa]ccepted values are (.-)%.')
+    local vals = list and parse_value_list(list)
+
+    if not vals then
+      local fvals = {}
+      local fseen = {}
+      local function add(v)
+        if v and #v >= 2 and not fseen[v] then
+          fseen[v] = true
+          fvals[#fvals + 1] = v
+        end
+      end
+      for v1, v2 in text:gmatch(' is set to "?([%a][%a%d-]+)"? or "?([%a][%a%d-]+)"?') do
+        add(v1)
+        add(v2)
+      end
+      for v in text:gmatch(' is set to "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      for v in text:gmatch('%u[%a%d]+ set to "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      for v in text:gmatch('When set to "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      for v in text:gmatch('[Ss]etting %S+ to "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      for v in text:gmatch('value %S+ be set to "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      local these = text:match('[Tt]hese options are:? (.-)%.')
+      if these then
+        local tv = parse_value_list(these)
+        if tv then
+          for _, v in ipairs(tv) do
+            add(v)
+          end
+        end
+      end
+      for v in text:gmatch('[Tt]he default is "?([%a][%a%d-]+)"?') do
+        if v ~= 'to' then
+          add(v)
+        end
+      end
+      for v in text:gmatch('[Tt]he default, "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      for v in text:gmatch('[Aa]n argument of "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      for v in text:gmatch('[Aa] value of "?([%a][%a%d-]+)"?') do
+        add(v)
+      end
+      if #fvals >= 2 then
+        vals = fvals
+      end
+    end
+
+    if vals then
+      enums[def.keyword:lower()] = vals
+    end
+  end
+  return enums
+end
 
 ---@type table<string, string[]>
 local query_to_keywords = {
@@ -94,9 +163,9 @@ local function parse_keywords(stdout)
 
   local defs = {}
   for i, line in ipairs(lines) do
-    local kw = line:match('^       (%u%a+)%s*$') or line:match('^       (%u%a+)   ')
+    local kw = line:match('^       (%u[%a%d]+)%s*$') or line:match('^       (%u[%a%d]+)  ')
     if kw then
-      local inline = line:match('^       %u%a+%s%s%s+(.+)')
+      local inline = line:match('^       %u[%a%d]+%s%s+(.+)')
       defs[#defs + 1] = { line = i, keyword = kw, inline = inline }
     end
   end
@@ -147,11 +216,12 @@ local function parse_keywords(stdout)
 end
 
 ---@param stdout string
+---@param man_enums table<string, string[]>
 ---@return table<string, string[]>
-local function parse_enums(stdout)
+local function parse_enums(stdout, man_enums)
   local enums = {}
-  for k, v in pairs(static_enums) do
-    enums[k:lower()] = v
+  for k, v in pairs(man_enums) do
+    enums[k] = v
   end
 
   local current_query = nil
@@ -249,7 +319,11 @@ function M:get_completions(ctx, callback)
           kw = {}
         end
         keywords_cache = kw
-        local ok_en, en = pcall(parse_enums, enums_out)
+        local ok_me, me = pcall(extract_enums_from_man, man_out)
+        if not ok_me then
+          me = {}
+        end
+        local ok_en, en = pcall(parse_enums, enums_out, me)
         if not ok_en then
           en = {}
         end
