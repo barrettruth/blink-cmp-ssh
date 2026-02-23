@@ -146,6 +146,21 @@ describe('blink-cmp-ssh', function()
       assert.is_truthy(strict.documentation.value:find('known_hosts'))
     end)
 
+    it('includes inline description for keywords with text on the same line', function()
+      restores[#restores + 1] = mock_system()
+      local source = require('blink-cmp-ssh').new()
+      local items
+      source:get_completions({ line = '', cursor = { 1, 0 } }, function(response)
+        items = response.items
+      end)
+      local host = vim.iter(items):find(function(item)
+        return item.label == 'Host'
+      end)
+      assert.is_not_nil(host)
+      assert.is_not_nil(host.documentation)
+      assert.is_truthy(host.documentation.value:find('Restricts'))
+    end)
+
     it('returns enum values after a known keyword', function()
       restores[#restores + 1] = mock_system()
       local source = require('blink-cmp-ssh').new()

@@ -96,7 +96,8 @@ local function parse_keywords(stdout)
   for i, line in ipairs(lines) do
     local kw = line:match('^       (%u%a+)%s*$') or line:match('^       (%u%a+)   ')
     if kw then
-      defs[#defs + 1] = { line = i, keyword = kw }
+      local inline = line:match('^       %u%a+%s%s%s+(.+)')
+      defs[#defs + 1] = { line = i, keyword = kw, inline = inline }
     end
   end
 
@@ -105,6 +106,9 @@ local function parse_keywords(stdout)
     local block_end = (defs[idx + 1] and defs[idx + 1].line or #lines) - 1
 
     local desc_lines = {}
+    if def.inline then
+      desc_lines[#desc_lines + 1] = '               ' .. def.inline
+    end
     for k = def.line + 1, block_end do
       desc_lines[#desc_lines + 1] = lines[k]
     end
