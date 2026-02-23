@@ -52,7 +52,9 @@ local function extract_enums_from_man(man_stdout)
 
   local defs = {}
   for i, line in ipairs(lines) do
-    local kw = line:match('^       (%u[%a%d]+)%s*$') or line:match('^       (%u[%a%d]+)  ')
+    local kw = line:match('^       (%u[%a%d]+)%s*$')
+      or line:match('^       (%u[%a%d]+)   ')
+      or line:match('^       (%u[%a%d]+)  %u')
     if kw then
       defs[#defs + 1] = { line = i, keyword = kw }
     end
@@ -163,7 +165,9 @@ local function parse_keywords(stdout)
 
   local defs = {}
   for i, line in ipairs(lines) do
-    local kw = line:match('^       (%u[%a%d]+)%s*$') or line:match('^       (%u[%a%d]+)  ')
+    local kw = line:match('^       (%u[%a%d]+)%s*$')
+      or line:match('^       (%u[%a%d]+)   ')
+      or line:match('^       (%u[%a%d]+)  %u')
     if kw then
       local inline = line:match('^       %u[%a%d]+%s%s+(.+)')
       defs[#defs + 1] = { line = i, keyword = kw, inline = inline }
