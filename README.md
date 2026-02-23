@@ -6,10 +6,10 @@ SSH configuration completion source for
 ## Features
 
 - Completes `ssh_config` keywords with man page documentation
-- Provides enum values for keywords with known option sets (ciphers,
-  MACs, key exchange algorithms, etc.)
-- Keyword and enum data fetched asynchronously at runtime via
-  `man ssh_config` and `ssh -Q`
+- Provides enum values for keywords with known option sets (ciphers, MACs, key
+  exchange algorithms, etc.)
+- Keyword and enum data fetched asynchronously at runtime via `man ssh_config`
+  and `ssh -Q`
 
 ## Requirements
 
@@ -19,8 +19,7 @@ SSH configuration completion source for
 
 ## Installation
 
-Install via
-[luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ssh):
+Install via [luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ssh):
 
 ```
 luarocks install blink-cmp-ssh
