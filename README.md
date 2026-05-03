@@ -21,30 +21,32 @@ SSH configuration completion source for
 
 ## Installation
 
-Install via [luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ssh):
+With `vim.pack` (Neovim 0.12+):
+
+```lua
+vim.pack.add({
+  'https://git.barrettruth.com/barrettruth/blink-cmp-ssh',
+})
+```
+
+Or via [luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ssh):
 
 ```
 luarocks install blink-cmp-ssh
 ```
 
-Or with lazy.nvim:
+Configure `blink.cmp`:
 
 ```lua
-{
-  'saghen/blink.cmp',
-  dependencies = {
-    { url = 'https://git.barrettruth.com/barrettruth/blink-cmp-ssh' },
-  },
-  opts = {
-    sources = {
-      default = { 'ssh' },
-      providers = {
-        ssh = {
-          name = 'SSH',
-          module = 'blink-cmp-ssh',
-        },
+require('blink.cmp').setup({
+  sources = {
+    default = { 'ssh' },
+    providers = {
+      ssh = {
+        name = 'SSH',
+        module = 'blink-cmp-ssh',
       },
     },
   },
-}
+})
 ```
