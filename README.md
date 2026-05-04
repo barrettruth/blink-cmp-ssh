@@ -3,6 +3,11 @@
 SSH configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
+> [!NOTE]
+> Due to GitHub's historic unreliability, development, issues, and pull requests
+> have moved to
+> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ssh).
+
 ![blink-cmp-ssh preview](https://github.com/user-attachments/assets/75927ef9-4af8-481a-bd17-01713de48280)
 
 ## Features
