@@ -1,0 +1,65 @@
+*blink-cmp-ssh.txt* SSH configuration completion source for blink.cmp
+
+Author:  Barrett Ruth <br@barrettruth.com> License: GPL-3.0
+
+==============================================================================
+CONTENTS                                              *blink-cmp-ssh-contents*
+
+  1. Introduction ..................................... |blink-cmp-ssh|
+  2. Installation ............................. |blink-cmp-ssh-installation|
+  3. Configuration ........................... |blink-cmp-ssh-configuration|
+  4. Forgejo .................................... |blink-cmp-ssh-forgejo|
+  5. Health ...................................... |blink-cmp-ssh-health|
+
+==============================================================================
+INTRODUCTION                                                   *blink-cmp-ssh*
+
+blink-cmp-ssh provides ssh_config keyword completions for blink.cmp. It
+fetches keyword documentation from `man ssh_config` and known option sets from
+`ssh -Q`.
+
+==============================================================================
+INSTALLATION                                      *blink-cmp-ssh-installation*
+
+With vim.pack (Neovim 0.12+): >lua
+    vim.pack.add({
+      'https://git.barrettruth.com/barrettruth/blink-cmp-ssh',
+    })
+< With luarocks: >sh
+    luarocks install blink-cmp-ssh
+<
+
+==============================================================================
+CONFIGURATION                                    *blink-cmp-ssh-configuration*
+
+Register the source with blink.cmp: >lua
+    require('blink.cmp').setup({
+      sources = {
+        default = { 'ssh' },
+        providers = {
+          ssh = {
+            name = 'SSH',
+            module = 'blink-cmp-ssh',
+          },
+        },
+      },
+    })
+<
+
+==============================================================================
+FORGEJO                                                *blink-cmp-ssh-forgejo*
+
+Due to GitHub's historic unreliability, development, issues, and pull requests
+have moved to: >
+    https://git.barrettruth.com/barrettruth/blink-cmp-ssh
+<
+Use Forgejo for documentation, issues, pull requests, and active development.
+
+==============================================================================
+HEALTH                                                  *blink-cmp-ssh-health*
+
+Run: >vim
+    :checkhealth blink-cmp-ssh
+<
+
+vim:tw=78:ts=8:ft=help:norl:
