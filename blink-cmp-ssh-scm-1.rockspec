@@ -9,7 +9,7 @@ source = {
 description = {
   summary = 'SSH configuration completion source for blink.cmp',
   homepage = 'https://git.barrettruth.com/barrettruth/blink-cmp-ssh',
-  license = 'MIT',
+  license = 'GPL-3.0',
 }
 
 dependencies = {
