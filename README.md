@@ -4,10 +4,10 @@ SSH configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
 > [!NOTE]
-> Due to GitHub's historic unreliability, development, issues, and pull requests
-> have moved to
-> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ssh). See
-> `:help blink-cmp-ssh-forgejo` for canonical project links.
+> Due to GitHub's historic unreliability, active development is hosted on
+> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ssh).
+> GitHub is maintained as a read-only mirror.
+> See `:help blink-cmp-ssh-forgejo` for canonical project links.
 
 ![blink-cmp-ssh preview](https://github.com/user-attachments/assets/75927ef9-4af8-481a-bd17-01713de48280)
 
