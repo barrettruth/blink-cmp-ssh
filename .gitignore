@@ -1,4 +1,5 @@
 *.log
+doc/tags
 
 .*cache*
 CLAUDE.md
