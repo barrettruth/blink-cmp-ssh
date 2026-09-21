@@ -3,12 +3,12 @@ package = 'blink-cmp-ssh'
 version = 'scm-1'
 
 source = {
-  url = 'git+https://git.barrettruth.com/barrettruth/blink-cmp-ssh.git',
+  url = 'git+https://forge.barrettruth.com/barrettruth/blink-cmp-ssh.git',
 }
 
 description = {
   summary = 'SSH configuration completion source for blink.cmp',
-  homepage = 'https://git.barrettruth.com/barrettruth/blink-cmp-ssh',
+  homepage = 'https://forge.barrettruth.com/barrettruth/blink-cmp-ssh',
   license = 'GPL-3.0',
 }
 

@@ -5,7 +5,7 @@ SSH configuration completion source for
 
 > [!NOTE]
 > Due to GitHub's historic unreliability, active development is hosted on
-> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ssh).
+> [Forgejo](https://forge.barrettruth.com/barrettruth/blink-cmp-ssh).
 > GitHub is maintained as a read-only mirror.
 > See `:help blink-cmp-ssh-forgejo` for canonical project links.
 
@@ -31,7 +31,7 @@ With `vim.pack` (Neovim 0.12+):
 
 ```lua
 vim.pack.add({
-  'https://git.barrettruth.com/barrettruth/blink-cmp-ssh',
+  'https://forge.barrettruth.com/barrettruth/blink-cmp-ssh',
 })
 ```
 
