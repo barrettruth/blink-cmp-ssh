@@ -25,10 +25,6 @@ With vim.pack (Neovim 0.12+): >lua
     vim.pack.add({
       'https://forge.barrettruth.com/barrettruth/blink-cmp-ssh',
     })
-< With luarocks: >sh
-    luarocks install blink-cmp-ssh
-<
-
 ==============================================================================
 CONFIGURATION                                    *blink-cmp-ssh-configuration*
 

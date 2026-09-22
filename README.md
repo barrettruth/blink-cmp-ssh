@@ -33,12 +33,6 @@ vim.pack.add({
 })
 ```
 
-Or via [luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ssh):
-
-```
-luarocks install blink-cmp-ssh
-```
-
 Configure `blink.cmp`:
 
 ```lua
