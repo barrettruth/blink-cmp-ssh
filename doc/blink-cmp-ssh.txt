@@ -8,7 +8,7 @@ CONTENTS                                              *blink-cmp-ssh-contents*
   1. Introduction ..................................... |blink-cmp-ssh|
   2. Installation ............................. |blink-cmp-ssh-installation|
   3. Configuration ........................... |blink-cmp-ssh-configuration|
-  4. Forgejo .................................... |blink-cmp-ssh-forgejo|
+  4. Migration ................................. |blink-cmp-ssh-migration|
   5. Health ...................................... |blink-cmp-ssh-health|
 
 ==============================================================================
@@ -47,12 +47,14 @@ Register the source with blink.cmp: >lua
 <
 
 ==============================================================================
-FORGEJO                                                *blink-cmp-ssh-forgejo*
+MIGRATION                                            *blink-cmp-ssh-migration*
 
-Development, issues, and pull requests are on Forgejo: >
-    https://forge.barrettruth.com/barrettruth/blink-cmp-ssh
+blink-cmp-ssh will be removed from GitHub on October 31, 2026. Update your
+plugin source to Forgejo: >lua
+    vim.pack.add({
+      'https://forge.barrettruth.com/barrettruth/blink-cmp-ssh',
+    })
 <
-Use Forgejo for documentation, issues, pull requests, and active development.
 
 ==============================================================================
 HEALTH                                                  *blink-cmp-ssh-health*
