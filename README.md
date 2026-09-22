@@ -3,7 +3,7 @@
 SSH configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
-![blink-cmp-ssh preview](assets/blink-cmp-ssh.webp)
+![blink-cmp-ssh preview](https://forge.barrettruth.com/attachments/3be1364e-5c79-4ca1-ad37-f8217cbed857)
 
 ## Features
 
