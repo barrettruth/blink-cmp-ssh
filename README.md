@@ -4,11 +4,10 @@ SSH configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
 > [!NOTE]
-> Development is hosted on
+> Active development is hosted on
 > [Forgejo](https://forge.barrettruth.com/barrettruth/blink-cmp-ssh).
-> See `:help blink-cmp-ssh-forgejo` for canonical project links.
 
-![blink-cmp-ssh preview](https://github.com/user-attachments/assets/75927ef9-4af8-481a-bd17-01713de48280)
+![blink-cmp-ssh preview](assets/blink-cmp-ssh.webp)
 
 ## Features
 
